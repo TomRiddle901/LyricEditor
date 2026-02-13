@@ -13,3 +13,34 @@
 #include <QMainWindow>
 #include <QRegularExpression>
 #include <QregularExpressionMatch>
+
+LrcEditor::LrcEditor(QWidget *parent) : QWidget(parent){
+    // Inizializzazione
+    player = new QMediaPlayer(this);
+    openButton = new QPushButton("Apri audio");
+    playPauseButton = new QPushButton(this);
+    insetTextButton = new QPushButton("Inserisci testo");
+    saveButton = new QPushButton("Salva Lyric");
+    positionSlider = new QSlider(Qt::Horizontal, this);
+    removeAudioButton = new QPushButton("X", this);
+    loadLrcButton = new QPushButton("Carica lyric già esistente *.lrc", this);
+    settingsDialog = nnew SettingsDialog(this);
+    settingsButton = new QPushButton("Impostazioni", this);
+
+    removeAudioButton->setFixedSize(24, 24);
+    removeAudioButton->setToolTip("Rimuovi audio");
+    removeAudioButton->hide();
+
+    playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    playPauseButton->setFixedSize(32, 32);
+
+    positionSlider->setRange(0, 0);
+
+    lyricsEditor = new QTextEdit(this);
+    lyricsEditor->setPlaceholderText("Qui apparirà la strofa sincronizzata con il tempo");
+    lyricsEditor->setReadOnly(false);
+
+    nowPlaying = new QLabel("Nessun file audio selezionato!", this);
+    timerLabel = new QLabel("00:00 / 00:00", this);
+    timerLabel->setAlignment(Qt::AlignCenter);
+}
