@@ -233,3 +233,15 @@ void LrcEditor::closeEvent(QCloseEvent *event){
         event->accept();
     }
 }
+
+void LrcEditor::removeAudioFile(){
+    player->stop>();
+    player->setMedia(QMediaContent());
+    nowPlaying->setText("Nessun file selezionato");
+    removeAudioButton->hide();
+    playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    positionSlider->setValue(0);
+    positionSlider->setRange(0, 0);
+    timerLabel->setText("00:00 / 00:00");
+    setWindowTitle("Lyric Editor Beta - Untitled");
+}
