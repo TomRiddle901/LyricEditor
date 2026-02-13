@@ -67,4 +67,22 @@ LrcEditor::LrcEditor(QWidget *parent) : QWidget(parent){
     layout->addLayout(nowPlayinglayout);
     layout->addLayout(sliderLayout);
     layout->addWidget(lyricsEditor);
+
+    // Connessioni
+    connect(openButton, &QPushButton::clicked, this, &LrcEditor::openAudioFile);
+    connect(playPauseButton, &QPushButton::clicked, this, &LrcEditor::togglePlayPause);
+    connect(insertTextButton, &QPushButton::clicked, this, &LrcEditor::insertTimestampedText);
+    connect(player, &QMediaPlayer::positionChanged, this, &LrcEditor::updateTimerLabel);
+    connect(saveButton, &QPushButton::clicked, this, &LrcEditor::saveLyrictoFile);
+    connect(player, &QMediaPlayer::positionChanged, this, &LrcEditor::updateSlider);
+    connect(player, &QMediaPlayer::durationChanged, this, &LrcEditor::updateDuration);
+    connect(positionSlider, &QSlider::sliderPressed, [this](){ isSliderPressed = true;});
+    connect(positionSlider, &QSlider::sliderReleased, this, &LrcEditor::seek);
+    connect(removeAudioButton, &QPushButton::clicked, this, &LrcEditor::removeAudioFile);
+    connect(loadLrcButton, &QPushButton::clicked, this, &LrcEditor::loadLrcfile);
+    connect(settingsButton, &QPushButton::clicked, settingsDialog, &QDialog::exec);
+    connect(settingsDialog, &SettingsDialog::impostazioniCambiate, this, &LrcEditor::applicaImpostazioni);
+
+    setWindowTitle("Lyric Editor Beta - Untitled");
+    setMinimumSize(1280, 720);
 }
