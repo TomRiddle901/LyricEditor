@@ -43,3 +43,11 @@ void SettingsDialog::chooseFont(){
         emit impostazioniCambiate(selectedColor, selectedFont);
     }
 }
+
+QColor SettingsDialog::getTheme() const{
+    return selectedColor;
+}
+
+QFont SettingsDialog::getFont() const{
+    return selectedFont;
+}
