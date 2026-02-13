@@ -281,3 +281,11 @@ void LrcEditor::loadLrcfile(){
     lyricsEditor->setPlainText(content);
     setWindowTitle("Lyric Editor Beta - " + QFileInfo(filePath).fileName());
 }
+
+void LrcEditor::applicaImpostazioni(const QColor &colore, const QFont &font){
+    lyricsEditor->setFont(font);
+    QPalette p = lyricsEditor->palette();
+    p.setColor(QPalette::Base, colore); // Sfondo
+    p.setColor(QPalette::Text, colore.lightness() < 120 ? Qt::white : Qt::black);
+    lyricsEditor->setPalette(p);
+}
