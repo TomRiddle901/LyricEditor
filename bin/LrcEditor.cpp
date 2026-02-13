@@ -43,4 +43,28 @@ LrcEditor::LrcEditor(QWidget *parent) : QWidget(parent){
     nowPlaying = new QLabel("Nessun file audio selezionato!", this);
     timerLabel = new QLabel("00:00 / 00:00", this);
     timerLabel->setAlignment(Qt::AlignCenter);
+
+    // Layout
+    auto *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addWidget(openButton);
+    buttonsLayout->addWidget(loadLrcButton);
+    buttonsLayout->addWidget(insertTextButton);
+    buttonsLayout->addWidget(saveButton);
+    buttonsLayout->addWidget(settingsButton);
+
+    auto *sliderLayout = new QHBoxLayout;
+    sliderLayout->addWidget(playPauseButton);
+    sliderLayout->addWidget(positionSlider);
+
+    auto *nowPlayinglayout = new QHBoxLayout;
+    nowPlayinglayout->addWidget(nowPlaying);
+    nowPlayinglayout->addWidget(removeAudioButton);
+    nowPlayinglayout->addStretch();
+
+    auto *layout = new QVBoxLayout(this);
+    layout->addLayout(buttonsLayout);
+    layout->addWidget(timerLabel);
+    layout->addLayout(nowPlayinglayout);
+    layout->addLayout(sliderLayout);
+    layout->addWidget(lyricsEditor);
 }
