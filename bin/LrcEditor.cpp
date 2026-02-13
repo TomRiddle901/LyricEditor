@@ -86,3 +86,15 @@ LrcEditor::LrcEditor(QWidget *parent) : QWidget(parent){
     setWindowTitle("Lyric Editor Beta - Untitled");
     setMinimumSize(1280, 720);
 }
+
+void LrcEditor::openAudioFile(){
+    QString filePath = QFileDialog::getOpenFileName(this, "Scegli file audio", "", "Audio files (*.mp3 *.wav *.ogg);;Tutti i file (*.*)");
+
+    if (!filePath.isEmpty()){
+        player->setMedia(QUrl::fromLocalFile(filePath));
+        nowPlaying->setText("In Riproduzione: " + QFileInfo(filePath).fileName());
+        removeAudioButton->show();
+        playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+        setWindowTitle("Lyric Editor Beta - " + QFileInfo(filePath).fileName());
+    }
+}
