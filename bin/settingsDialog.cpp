@@ -25,3 +25,11 @@ backgroundPwColor(Qt::black), selectedFont(QFont("Ubuntu", 12)){
 }
 
 SettingsDialog::~SettingsDialog(){}
+
+void SettingsDialog::chooseColor(){
+    QColor color = QColorDialog::getColor(selectedColor, this);
+    if (color.isValid()){
+        selectedColor = color;
+        emit impostazioniCambiate(selectedColor, selectedFont);
+    }
+}
