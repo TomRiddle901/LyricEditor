@@ -113,3 +113,43 @@ void LrcEditor::togglePlayPause(){
         playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
 }
+
+void LrcEditor::insertTimestampedText(){
+    bool allowInsert = true;
+
+    if (player->mediaStatus() == QMediaPlayer::NoMedia){
+        QMessageBox msgBox(this);
+        msgBox.setWindowtitle("Errore");
+        msgBox.setText("Nessun file audio caricato. Vuoi inserire solo il testo?");
+        QPushButton *insertOnlyTextBtn = msgBox.addButton("OK", QMessageBox::AcceptRole);
+        msg.Box.addButton("NO", QMessageBox::RejectRole);
+        msgBox.exec();
+
+        if (msgBox.clickedButton() != insertOnlyTextBtn){
+            allowInsert = false;
+        }
+    }
+
+    if (!allowInsert){
+        return;
+    }
+
+    if (player->state() == QMediaPlayer::PlayingState){
+        player->pause();
+        playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    }
+
+    // Prendi timestamp
+    quint64 ms = player->position();
+    QTIme time(0, 0);
+    time = time.addMSecs(ms);
+    QString timestamp = QString("[%1]").arg(time.toString("mm:ss.zzz").left(8));
+    
+    // Richiedi testo
+    bool ok;
+    Qstring line = QInputDialog::getText(this, "Inserisci il testo", "Testo da sincronizzare:", QLineEdit::Normal, "", &ok);
+
+    if (ok && !line.isEmpty()){
+        lyricsEditor->append(timestamp + " " + line);
+    }
+}
