@@ -211,3 +211,25 @@ void LrcEditor::seek(){
     isSliderPressed = false;
     player->setPosition(positionSlider->value());
 }
+
+void LrcEditor::closeEvent(QCloseEvent *event){
+    bool hasLyrics = !lyricsEditor->toPlainText().trimmed().isEmpty();
+    bool hasAudio = (player->mediaStatus() != QMediaPlayer::NoMedia);
+
+    if (hasLyrics || hasAudio){
+        QMessageBox::StandardButton reply = QMessageBox::question(
+            this,
+            "Conferma uscita",
+            "Sei sicuro di voler uscire? Eventuali modifiche non salvate andranno perse.",
+            QMessageBox::Yes | QMessageBox::No
+        );
+
+        if (reply == QMessageBox::Yes){
+            event->accept();
+        } else {
+            event->ignore();
+        }
+    } else{
+        event->accept();
+    }
+}
