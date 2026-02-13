@@ -1,6 +1,6 @@
 #include "LrcEditor.h"
 #include "settingsDialog.h"
-#include <QTIme>
+#include <QTime>
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QFileInfo>
@@ -12,23 +12,23 @@
 #include <QMenuBar>
 #include <QMainWindow>
 #include <QRegularExpression>
-#include <QregularExpressionMatch>
+#include <QRegularExpressionMatch>
 
 LrcEditor::LrcEditor(QWidget *parent) : QWidget(parent){
     // Inizializzazione
     player = new QMediaPlayer(this);
-    openButton = new QPushButton("Apri audio");
+    openButton = new QPushButton("Apri Audio");
     playPauseButton = new QPushButton(this);
-    insetTextButton = new QPushButton("Inserisci testo");
+    insertTextButton = new QPushButton("Inserisci testo");
     saveButton = new QPushButton("Salva Lyric");
     positionSlider = new QSlider(Qt::Horizontal, this);
     removeAudioButton = new QPushButton("X", this);
-    loadLrcButton = new QPushButton("Carica lyric già esistente *.lrc", this);
-    settingsDialog = nnew SettingsDialog(this);
+    loadLrcButton = new QPushButton("Carica lyric già esistente *.lrc",this);
+    settingsDialog = new SettingsDialog(this);
     settingsButton = new QPushButton("Impostazioni", this);
 
     removeAudioButton->setFixedSize(24, 24);
-    removeAudioButton->setToolTip("Rimuovi audio");
+    removeAudioButton->setToolTip("Rimuovi Audio");
     removeAudioButton->hide();
 
     playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -89,7 +89,6 @@ LrcEditor::LrcEditor(QWidget *parent) : QWidget(parent){
 
 void LrcEditor::openAudioFile(){
     QString filePath = QFileDialog::getOpenFileName(this, "Scegli file audio", "", "Audio files (*.mp3 *.wav *.ogg);;Tutti i file (*.*)");
-
     if (!filePath.isEmpty()){
         player->setMedia(QUrl::fromLocalFile(filePath));
         nowPlaying->setText("In Riproduzione: " + QFileInfo(filePath).fileName());
@@ -101,14 +100,14 @@ void LrcEditor::openAudioFile(){
 
 void LrcEditor::togglePlayPause(){
     if (player->mediaStatus() == QMediaPlayer::NoMedia){
-        QMessageBox::warning(this, "Nessun file audio selezionato, selezionane uno cliccando 'Apri Audio' prima di riprodurre");
+        QMessageBox::warning(this, "Errore", "Nessun file audio selezionato, selezionane uno cliccando 'Apri Audio' prima di riprodurre");
         return;
     }
 
-    if (player-state() == QMediaPlayer::PlayingState){
+    if (player->state() == QMediaPlayer::PlayingState){
         player->pause();
         playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-    } else {
+    } else{
         player->play();
         playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
@@ -119,10 +118,10 @@ void LrcEditor::insertTimestampedText(){
 
     if (player->mediaStatus() == QMediaPlayer::NoMedia){
         QMessageBox msgBox(this);
-        msgBox.setWindowtitle("Errore");
+        msgBox.setWindowTitle("Errore");
         msgBox.setText("Nessun file audio caricato. Vuoi inserire solo il testo?");
         QPushButton *insertOnlyTextBtn = msgBox.addButton("OK", QMessageBox::AcceptRole);
-        msg.Box.addButton("NO", QMessageBox::RejectRole);
+        msgBox.addButton("NO", QMessageBox::RejectRole);
         msgBox.exec();
 
         if (msgBox.clickedButton() != insertOnlyTextBtn){
@@ -141,24 +140,25 @@ void LrcEditor::insertTimestampedText(){
 
     // Prendi timestamp
     quint64 ms = player->position();
-    QTIme time(0, 0);
+    QTime time(0, 0);
     time = time.addMSecs(ms);
     QString timestamp = QString("[%1]").arg(time.toString("mm:ss.zzz").left(8));
-    
+
     // Richiedi testo
     bool ok;
-    Qstring line = QInputDialog::getText(this, "Inserisci il testo", "Testo da sincronizzare:", QLineEdit::Normal, "", &ok);
+    QString line = QInputDialog::getText(this, "Inserisci il testo", "Testo da sincronizzare:", QLineEdit::Normal, "", &ok);
 
     if (ok && !line.isEmpty()){
         lyricsEditor->append(timestamp + " " + line);
     }
 }
 
-void LrcEditor::updateTimerLabel(qint64 position){
+void LrcEditor::updateTimerLabel(quint64 position){
     qint64 duration = player->duration();
+    
+    QTime currentTime((position/3600000)%60, (position/60000)%60, (position/1000)%60);
+    QTime totalTime((duration/3600000)%60, (duration/60000)%60, (duration/1000)%60);
 
-    QTime currentTime((position / 3600000)%60, (position / 60000)%60, (position/1000)%60);
-    QTime totaltime((duration / 3600000)%60, (duration / 60000)%60, (duration/1000)%60);
     QString timeText = currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss");
     timerLabel->setText(timeText);
 }
@@ -169,8 +169,7 @@ void LrcEditor::saveLyrictoFile(){
         return;
     }
 
-    QString filePath = QFileDialog::getSaveFileName(this, "Salva lrc", "", "File LRC (*.lrc);;Tutti i file (*.*)");
-
+    QString filePath = QFileDialog::getSaveFileName(this, "Salva file lrc", "", "File LRC (*.lrc);;Tutti i file(*.*)");
     if (filePath.isEmpty()){
         return;
     }
@@ -182,13 +181,13 @@ void LrcEditor::saveLyrictoFile(){
 
     QFile file(filePath);
 
-    if (file.open(QIODevide::WriteOnly | QIODevice::Text)){
-        QTextStram out(&file);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
+        QTextStream out(&file);
         out << lyricsEditor->toPlainText();
         file.close();
         QMessageBox::information(this, "Salvataggio completato", "File salvato con successo in:\n" + filePath);
-    } else{
-        QMessageBox::critical(this, "Errore", "A causa di un errore sconosciuto non è stato possibile salvare il file");
+    }else {
+        QMessageBox::warning(this, "Errore", "A causa di un errore sconosciuto non è stato possibile salvare il file");
     }
 }
 
@@ -200,10 +199,10 @@ void LrcEditor::updateSlider(quint64 position){
     currentTime = currentTime.addMSecs(position);
     QTime totalTime(0, 0, 0);
     totalTime = totalTime.addMSecs(player->duration());
-    timerLabel->setText(currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss"));
+    timerLabel->setText(currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss")); 
 }
 
-void LrcEditor::updateDuration(qint64 duration){
+void LrcEditor::updateDuration(quint64 duration){
     positionSlider->setRange(0, static_cast<int>(duration));
 }
 
@@ -229,13 +228,13 @@ void LrcEditor::closeEvent(QCloseEvent *event){
         } else {
             event->ignore();
         }
-    } else{
+    } else {
         event->accept();
     }
 }
 
 void LrcEditor::removeAudioFile(){
-    player->stop>();
+    player->stop();
     player->setMedia(QMediaContent());
     nowPlaying->setText("Nessun file selezionato");
     removeAudioButton->hide();
@@ -248,7 +247,7 @@ void LrcEditor::removeAudioFile(){
 
 void LrcEditor::loadLrcfile(){
     // Verifica se c'è del testo già presente
-    if (!lyricsEditor->toPlainText().trimmed().isEmpty()){
+    if (!lyricsEditor->toPlainText().trimmed().isEmpty()) {
         QMessageBox::StandardButton reply = QMessageBox::question(
             this,
             "Sovrascrivere il file attuale?",
@@ -256,15 +255,15 @@ void LrcEditor::loadLrcfile(){
             QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel
         );
 
-        if (reply == QMessageBox::Yes){
+        if (reply == QMessageBox::Yes) {
             saveLyrictoFile();
-        } else if (reply == QMessageBox::Cancel){
+        } else if (reply == QMessageBox::Cancel) {
             return;
         }
     }
 
-    QString filePath = QFileDialog::getOpenFileName(this, "carica file LRC", "", "File LRC (*.lrc);;Tutti i file (*.*)");
-    if (filePath.isEmpty()){
+    QString filePath = QFileDialog::getOpenFileName(this, "Carica file LRC", "", "File LRC (*.lrc);;Tutti i file (*.*)");
+    if (filePath.isEmpty()) {
         return;
     }
 
