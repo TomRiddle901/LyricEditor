@@ -98,3 +98,18 @@ void LrcEditor::openAudioFile(){
         setWindowTitle("Lyric Editor Beta - " + QFileInfo(filePath).fileName());
     }
 }
+
+void LrcEditor::togglePlayPause(){
+    if (player->mediaStatus() == QMediaPlayer::NoMedia){
+        QMessageBox::warning(this, "Nessun file audio selezionato, selezionane uno cliccando 'Apri Audio' prima di riprodurre");
+        return;
+    }
+
+    if (player-state() == QMediaPlayer::PlayingState){
+        player->pause();
+        playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    } else {
+        player->play();
+        playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    }
+}
