@@ -152,14 +152,13 @@ void LrcEditor::insertTimestampedText(){
     if (ok && !line.isEmpty()){
         lyricsEditor->append(timestamp + " " + line);
     }
+}
 
-    void LrcEditor::updateTimerLabel(qint64 position){
-        qint64 duration = player->duration();
+void LrcEditor::updateTimerLabel(qint64 position){
+    qint64 duration = player->duration();
 
-        QTime currentTime((position / 3600000)%60, (position / 60000)%60, (position/1000)%60);
-        QTime totaltime((duration / 3600000)%60, (duration / 60000)%60, (duration/1000)%60);
-
-        QString timeText = currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss");
-        timerLabel->setText(timeText);
-    }
+    QTime currentTime((position / 3600000)%60, (position / 60000)%60, (position/1000)%60);
+    QTime totaltime((duration / 3600000)%60, (duration / 60000)%60, (duration/1000)%60);
+    QString timeText = currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss");
+    timerLabel->setText(timeText);
 }
