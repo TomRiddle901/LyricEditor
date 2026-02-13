@@ -14,7 +14,7 @@ class SettingsDialog : public QDialog{
     Q_OBJECT
 
     public:
-        explicit SettingsDialog(Qwidget *parent = nullptr);
+        explicit SettingsDialog(QWidget *parent = nullptr);
         ~SettingsDialog();
 
         QColor getTheme() const;
@@ -23,7 +23,7 @@ class SettingsDialog : public QDialog{
 
     private slots:
         void chooseColor();
-        coid chooseFont();
+        void chooseFont();
 
     private:
         QPushButton *btnChooseColor;
