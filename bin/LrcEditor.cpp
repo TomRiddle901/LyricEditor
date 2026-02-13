@@ -206,3 +206,8 @@ void LrcEditor::updateSlider(quint64 position){
 void LrcEditor::updateDuration(qint64 duration){
     positionSlider->setRange(0, static_cast<int>(duration));
 }
+
+void LrcEditor::seek(){
+    isSliderPressed = false;
+    player->setPosition(positionSlider->value());
+}
