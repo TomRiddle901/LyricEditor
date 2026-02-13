@@ -191,3 +191,14 @@ void LrcEditor::saveLyrictoFile(){
         QMessageBox::critical(this, "Errore", "A causa di un errore sconosciuto non è stato possibile salvare il file");
     }
 }
+
+void LrcEditor::updateSlider(quint64 position){
+    if (!isSliderPressed){
+        positionSlider->setValue(static_cast<int>(position));
+    }
+    QTime currentTime(0, 0, 0);
+    currentTime = currentTime.addMSecs(position);
+    QTime totalTime(0, 0, 0);
+    totalTime = totalTime.addMSecs(player->duration());
+    timerLabel->setText(currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss"));
+}
