@@ -33,3 +33,13 @@ void SettingsDialog::chooseColor(){
         emit impostazioniCambiate(selectedColor, selectedFont);
     }
 }
+
+void SettingsDialog::chooseFont(){
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, selectedFont, this);
+    if (ok){
+        selectedFont = font;
+        lblFont->setText("Font corrente: " + selectedFont.toString());
+        emit impostazioniCambiate(selectedColor, selectedFont);
+    }
+}
