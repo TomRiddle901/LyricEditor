@@ -202,3 +202,7 @@ void LrcEditor::updateSlider(quint64 position){
     totalTime = totalTime.addMSecs(player->duration());
     timerLabel->setText(currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss"));
 }
+
+void LrcEditor::updateDuration(qint64 duration){
+    positionSlider->setRange(0, static_cast<int>(duration));
+}
