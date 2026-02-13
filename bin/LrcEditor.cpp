@@ -245,3 +245,39 @@ void LrcEditor::removeAudioFile(){
     timerLabel->setText("00:00 / 00:00");
     setWindowTitle("Lyric Editor Beta - Untitled");
 }
+
+void LrcEditor::loadLrcfile(){
+    // Verifica se c'è del testo già presente
+    if (!lyricsEditor->toPlainText().trimmed().isEmpty()){
+        QMessageBox::StandardButton reply = QMessageBox::question(
+            this,
+            "Sovrascrivere il file attuale?",
+            "Hai già un file LRC caricato o delle strofe inserite. Vuoi salvare prima di caricare un nuovo file?",
+            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel
+        );
+
+        if (reply == QMessageBox::Yes){
+            saveLyrictoFile();
+        } else if (reply == QMessageBox::Cancel){
+            return;
+        }
+    }
+
+    QString filePath = QFileDialog::getOpenFileName(this, "carica file LRC", "", "File LRC (*.lrc);;Tutti i file (*.*)");
+    if (filePath.isEmpty()){
+        return;
+    }
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Errore", "Impossibile aprire il file selezionato.");
+        return;
+    }
+
+    QTextStream in(&file);
+    QString content = in.readAll();
+    file.close();
+
+    lyricsEditor->setPlainText(content);
+    setWindowTitle("Lyric Editor Beta - " + QFileInfo(filePath).fileName());
+}
