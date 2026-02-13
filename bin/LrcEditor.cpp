@@ -162,3 +162,32 @@ void LrcEditor::updateTimerLabel(qint64 position){
     QString timeText = currentTime.toString("mm:ss") + " / " + totalTime.toString("mm:ss");
     timerLabel->setText(timeText);
 }
+
+void LrcEditor::saveLyrictoFile(){
+    if (lyricsEditor->toPlainText().trimmed().isEmpty()){
+        QMessageBox::warning(this, "Errore", "Non è possibile salvare il file vuoto, inserisci almeno una strofa");
+        return;
+    }
+
+    QString filePath = QFileDialog::getSaveFileName(this, "Salva lrc", "", "File LRC (*.lrc);;Tutti i file (*.*)");
+
+    if (filePath.isEmpty()){
+        return;
+    }
+
+    // Aggiungi l'estensione .lrc solo se non è presente
+    if (!filePath.endsWith(".lrc", Qt::CaseInsensitive)){
+        filePath += ".lrc";
+    }
+
+    QFile file(filePath);
+
+    if (file.open(QIODevide::WriteOnly | QIODevice::Text)){
+        QTextStram out(&file);
+        out << lyricsEditor->toPlainText();
+        file.close();
+        QMessageBox::information(this, "Salvataggio completato", "File salvato con successo in:\n" + filePath);
+    } else{
+        QMessageBox::critical(this, "Errore", "A causa di un errore sconosciuto non è stato possibile salvare il file");
+    }
+}
