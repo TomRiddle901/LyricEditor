@@ -23,3 +23,5 @@ backgroundPwColor(Qt::black), selectedFont(QFont("Ubuntu", 12)){
     setWindowTitle("Lyric Editor Beta - Impostazioni");
     setMinimumSize(600, 100);
 }
+
+SettingsDialog::~SettingsDialog(){}
