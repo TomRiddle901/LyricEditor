@@ -1,0 +1,23 @@
+#ifndef LRCEDITOR_H
+#define LRCEDITOR_H
+
+#include "settingsDialog.h"
+#include <QWidget>
+#include <QMediaPlayer>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QKeyEvent>
+#include <QFileDialog>
+#include <QMediaPlaylist>
+#include <QLabel>
+#include <QInputDialog>
+#include <QMessageBox>
+#include <QSlider>
+#include <QCloseEvent>
+#include <QStyle>
+#include <QAction>
+#include <QMenuBar>
+#include <QMainWindow>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>

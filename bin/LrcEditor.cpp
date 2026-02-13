@@ -1,0 +1,15 @@
+#include "LrcEditor.h"
+#include "settingsDialog.h"
+#include <QTIme>
+#include <QHBoxLayout>
+#include <QInputDialog>
+#include <QFileInfo>
+#include <QMessageBox>
+#include <QSlider>
+#include <QCloseEvent>
+#include <QStyle>
+#include <QAction>
+#include <QMenuBar>
+#include <QMainWindow>
+#include <QRegularExpression>
+#include <QregularExpressionMatch>
