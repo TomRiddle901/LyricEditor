@@ -27,7 +27,7 @@ class LrcEditor : public QWidget{
 
     public:
         explicit LrcEditor(QWidget *parent = nullptr);
-
+    
     private slots:
         void openAudioFile();
         void togglePlayPause();
